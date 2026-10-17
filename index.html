@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WhatsApp Grup Daveti</title>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 30px 16px; }
+    .container { background: #fff; border-radius: 12px; padding: 28px; width: 100%; max-width: 720px; box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+    h1 { color: #128C7E; margin-bottom: 20px; font-size: 1.4rem; }
+    label { display: block; font-size: .85rem; font-weight: bold; margin-bottom: 4px; color: #333; }
+    input[type="text"], input[type="file"] {
+      width: 100%; padding: 9px 12px; border: 1px solid #ccc;
+      border-radius: 8px; margin-bottom: 16px; font-size: .95rem;
+    }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: .95rem; }
+    .btn-primary { background: #25D366; color: #fff; }
+    .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+    .btn-send { background: #128C7E; color: #fff; margin-top: 16px; width: 100%; font-size: 1rem; padding: 12px; border-radius: 8px; border: none; cursor: pointer; }
+    .btn-send:disabled { background: #aaa; cursor: not-allowed; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: .9rem; }
+    th { background: #128C7E; color: #fff; padding: 8px 10px; text-align: left; }
+    td { padding: 7px 10px; border-bottom: 1px solid #eee; }
+    tr:hover td { background: #f9f9f9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: .78rem; }
+    .badge-wait { background: #fff3cd; color: #856404; }
+    .badge-sent { background: #d1e7dd; color: #0a3622; }
+    #summary { margin-top: 8px; font-size: .85rem; color: #555; }
+    .info-box { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: .85rem; color: #1a4f7a; }
+    .excel-info { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: .83rem; color: #444; }
+    .excel-info table { margin-top: 8px; font-size: .82rem; }
+    .excel-info th { background: #e9ecef; color: #333; padding: 5px 10px; }
+    .excel-info td { padding: 5px 10px; border-bottom: 1px solid #e9ecef; background: #fff; }
+    .col-name { font-family: monospace; background: #e8f5e9; color: #1b5e20; padding: 1px 6px; border-radius: 4px; }
+    .required { color: #c62828; font-weight: bold; }
+    .optional { color: #888; }
+    .btn-download { background: #1976D2; color: #fff; padding: 7px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: .82rem; margin-top: 10px; display: inline-flex; align-items: center; gap: 5px; }    
+    .btn-download:hover { background: #1565C0; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>📲 WhatsApp Grup Daveti Gönderici</h1>
+
+  <label>1. Excel Dosyasını Seç (.xlsx / .xls)</label>
+
+  <div class="excel-info">
+    <button class="btn-download" onclick="downloadTemplate()">⬇️ Şablon Excel'i İndir</button>
+  </div>
+
+  <input type="file" id="excelFile" accept=".xlsx,.xls" />
+
+  <label>2. WhatsApp Grup Davet Linki</label>
+  <input type="text" id="groupLink" placeholder="https://chat.whatsapp.com/XXXXXXXXXXXXXXX" />
+
+  <label>3. Gönderilecek Mesaj (isteğe bağlı ek metin)</label>
+  <input type="text" id="extraMsg" placeholder="Merhaba, sizi grubumuza davet ediyoruz." />
+
+  <button class="btn btn-primary" id="loadBtn" onclick="loadExcel()">Excel'i Yükle</button>
+
+  <div id="tableArea" style="display:none">
+    <div id="summary"></div>
+    <table>
+      <thead><tr><th>#</th><th>Ad Soyad</th><th>Telefon No</th><th>Durum</th><th>İşlem</th></tr></thead>
+      <tbody id="personTable"></tbody>
+    </table>
+    <button class="btn-send" id="sendAllBtn" onclick="sendAll()">Tümüne Gönder</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
